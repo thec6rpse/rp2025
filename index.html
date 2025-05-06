@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="img/redketchup/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/redketchup/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/redketchup/favicon-16x16.png">
+    <link rel="manifest" href="img/redketchup/site.webmanifest">
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[WAPI] Relatório RP 2025</title>
+</head>
+
+<body>
+
+<div class="container">
+    <header>
+        <h1>Relatório de Pedidos 2025</h1>
+        <nav>
+            <ul>
+                <li><a href="#mr">Métricas de Recuperação</a></li>
+                <li><a href="#pc">Processo de Certificação</a></li>
+                <li><a href="#pbidb">Power BI Dashboard</a></li>
+                <li><a href="#mc">Métricas de Cancelamento</a></li>
+                <li><a href="#ltb">Log Table</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+
+<p>
+    A ideia da criação de um relatório de pedidos foi pensada no segundo dia do mês de Abril. A partir deste dia eu me dediquei a investigar todos os meses sem exceção, levantando um database extenso
+    que possibilitará uma melhoria na análise de dados e nas tomadas de decisões da equipe durante as reuniões (caso houver). O dashboard foi realizado no Power BI com todos os dados exportados da
+    plataforma do WAPI. Os dados referidos neste caso são pedidos que foram constados com status de "Erro". As métricas para recuperação estará listada abaixo assim como soluções serão apresentadas
+    para sonegação de cancelados. Como um novato, inexperiente, portanto curioso pelo ramo da logística, colocarei fontes de pesquisa e estratégias para não soarem como soluções vindas de minhas imaginações.
+    Como também acostumado em criar bastante tangentes, você poderá acessar cada tópico clicando nos links anexados no ToC acima, assim facilitará a navegação e poderá ignorar paragráfos desnecessários. 
+</p>
+    
+    <h2 id="mr">Métricas de Recuperação</h2>
+<p>
+    O conceito claro e nitido das métricas de recuperação é a redução de cancelamentos e perdas. O que se espera é que a cada mês, o número de pedidos com status de erro seja reduzido. 
+    Para um aumento exponencial na quantidade destes, seguimos as tais métricas:
+</p>
+    <ol>
+        <li>Alteração do endereço com ferramentas de geolocalização na plataforma.</li>
+        <li>Alterações minimas em detalhes disponibilizados no status erro.</li>
+        <li>Contato com cliente.</li>
+        <li>Comunicação direta com o armazém.</li>
+    </ol>
+    <div id="dlvy">
+    <p>
+      A utilização destes métodos é obrigatória para a redução máxima de retornos de nossos produtos. Quanto maior o número de pedidos recuperados, melhores resultados surgirão no gráfico. A leitura será simplifcada
+        para facilitar a análise geral, mas lembre-se que quando me refiro a métricas de recuperação, eu estou recitando a soma do sub-total de produtos que tiveram:  
+    </p> 
+        <ul>
+            <li>Seus endereços alterados com sucesso (geolocation).</li>
+            <li>Respostas dos endereços corrigiveis (clientes).</li>
+            <li>Alterações bem sucedidas nos status erro da plataforma.</li>
+            <li><a>Pedidos constatados como entregues pela plataforma do WAPI.</a></li>
+        </ul>
+        
+    </div>
+    <p>
+        Objetivamente, temos diversos outros fatores benéficos, e um tanto considerados cruciais para utilização destas práticas. Uma delas é a suposição de que um cliente se torne um membro de nossa loja por exemplo.
+        Se o cliente faz compras contigentes, e divulga o nosso trabalho à terceiros, geramos customer fidelity. O que é primordial para diminuições de perdas consecutivas. Ademais, muitas vezes
+        é por conta do próprio cliente que o pedido há de atrasar, e isso deve-se a falta de dados inseridos, ou inseridos erroneamente nos campos de texto da nossa plataforma primária (Shopify). 
+        Como opção à mitigar estes falsos positivos, pude aderir o bloqueio de IP addresses de regiões não europeias no aplicativo do COD Form, o qual funcionou perfeitamente desde o mês de Abril. 
+        Esta ação pode não ser totalmente eficaz, supondo que o COD Form venha a atualizar o aplicativo e gere uma deseleção do bloqueio de IPs fora da região Européia. Mas, tendo o feature no aplicativo
+        podemos continuar esquivando estes imprevistos.
+    </p>
+    <p> É por isso que além de perpetuar certificando se houveram endereços inseridos incorretamente na
+        plataforma, truncagens e reavaliações são realizadas constantementes em nossos aplicativos antes de subirem para a integração do WAPI.</p>
+    <p>
+        Ciente que ainda assim não ficamos longe de erros. Tento viabilizar outras perspectivas para reajustar problemas como o acompanhamento de entregas por exemplo.
+        (do qual não sei se temos ou não um responsável pela inspeção). Pedidos que estão pendentes costumam enviar dados pela corretora de transporte, e é somente acessando a webpage da transportadora
+        que conseguimos saber se houve algum problema. Para isso pensei em criar um script onde consiga dar fetch em cada delivery id e linká-los em uma página somente. Assim poderemos visualizar 
+        com mais detalhes o que está acontecendo sem que precise filtrá-los um a um na plataforma do WAPI. 
+    </p>
+
+    <h2 id="pc">Processo de Certificação</h2>
+    
+    <p>Para parear os pedidos que foram editados nos status de erro, fazemos um bulk de todos os números WH ou "order id" e certificamos a olho nú com os dados exportados juntando as planilhas umas 
+        com as outras. Para um exemplo prático e visual segue a imagem de exemplo do que referimos quando "bulkamos" estes pedidos. 
+    </p>
+    
+        <img src="img/bulk.jpeg" alt="Bulk Example">
+    
+    <p>Separando por blankspaces conseguimos filtrar os mesmos pedidos que estavam em status error na aba de Fullfilments, cujo o padrão após as edições é transformar os alterados em "Pending".
+        Neste caso, pending seria o "modo de espera", um pedido pendente à ser enviado. O que não é o caso na figura acima. Notoriamente, um mero exemplo utilizado nos filtros dos produtos com erro 
+        constatados.
+    </p>
+    <p>A principal razão desta certificação é para comprovar que não houve Omissão de Dados além de evitar inferências manipuladas. Tal ato é altamente prejudicial e contrário aos princípios de 
+        transparência, confiabilidade e eficácia na análise de dados. Além disso, prejudica a credibilidade do dashboard e da organização, sugerindo manipulação ou falta de competência. Tal prática 
+        também viola princípios de governança de dados, especialmente por envolver datasets sensíveis como os de endereços e codAmount.
+    </p>
+
+    <h2 id="pbidb">Power BI dashboard</h2>
+    <p>Aqui, deixamos as planilhas mais simplificadas para o uso diário. Os primeiros passos para poder conciliar e fazer relações de dados é exportá-los como dito anteriormente. Após esssa coleção
+        temos de juntar as peças em um campo onde possamos criar matrizes e gráficos sem que terceiros tenham acesso a dados sensíveis ou que dificultem a leitura. Por estes motivos faço truncagem 
+        de pedidos por um dataset nomeado <b>editedStatus</b>. Este dataset é o que contém todos os pedidos que foram editados, cancelados e com espaços em branco para o encaminhamento da equipe de 
+        comunicação com cliente. Este passo não é necessáriamente considerado o mais importante, visto que, como marcado nas <a href="#dlvy">Métricas de Recuperação</a>, para uma reabilitação de pedidos
+        o essencial é o status de "Delivered".
+    </p>
+
+    <img src="img/estdb.png" alt="Figure of our Estimative Dashboard">
+    
+    
+    <h1>Métricas de Cancelamento</h1>
+    <p>
+        As métricas de cancelamento listadas no relatório abordam três principais causas de pedidos cancelados:
+        
+        <p><b>Pedido Fraudulento:</b> Refere-se a pedidos realizados de forma mal-intencionada ou com informações falsas. A solução envolve a implementação de sistemas de verificação e validação de dados para 
+        identificar fraudes antes da confirmação do pedido.
+        </p>
+        
+        <p><b>Pedido com Endereço Inválido:</b> Ocorre quando o endereço fornecido pelo cliente está incorreto ou incompleto. A solução está na utilização de ferramentas de geolocalização e comunicação com o 
+        cliente para corrigir os dados antes do envio.
+        </p>
+        <p><b>Falta de Resposta do Cliente:</b> Acontece quando o cliente não responde às tentativas de contato para resolver problemas relacionados ao pedido. A solução é estabelecer canais de comunicação 
+        eficientes e persistentes para obter respostas rápidas.
+        </p>
+    </p>
+
+    <p> Essas três métricas cobrem as principais razões para cancelamentos. São por causa destes trancafiadores que o número de pedidos não enviados tendem a aumentar.</p>
+
+<br id="ltb">
+
+<div class="lt">
+    <pre>
+__         ______     ______                       
+/\ \       /\  __ \   /\  ___\                      
+\ \ \____  \ \ \/\ \  \ \ \__ \                     
+ \ \_____\  \ \_____\  \ \_____\                    
+  \/_____/   \/_____/   \/_____/                    
+                                                    
+ ______   ______     ______     __         ______   
+/\__  _\ /\  __ \   /\  == \   /\ \       /\  ___\  
+\/_/\ \/ \ \  __ \  \ \  __<   \ \ \____  \ \  __\  
+   \ \_\  \ \_\ \_\  \ \_____\  \ \_____\  \ \_____\
+    \/_/   \/_/\/_/   \/_____/   \/_____/   \/_____/
+    </pre>
+</div>
+    <p> Como vamos lidar com diferentes tipos de arquivos e com grandes quantidades de dados, resolvi padronizar a nomenclatura de cada um visando a adaptação para quem for manusear as planilhas.
+        Como nossos arquivos serão vistos nas extensões <i>.xls</i> e/ou <i>.pbix</i> pensei em fazer a separação entre o que chamarei de <i>main files, ou arquivos principais</i>, e 
+        <i>exports, exportados</i>.
+    </p>
+    <p>Arquivos príncipais terão <b>pbi</b> no ínicio do nome. Isso é devido a utilização dele para a criação do Dashboard das Estimativas de Recuperação. Em seguida para a identificação de que foi
+        utilizado o dataset <i>editedStatus</i>, o mês, e o dataset estarão em camelCase pós underline (ou underscore). <i>i.e</i></p>
+    <pre>
+        <code>
+            pbi_01eS.xlsx
+            pbi_01eS.pbix
+            pbi_01eS.csv
+        </code>
+    </pre>
+    <div class="i-box">
+        <p style="font-size: 14px;">
+        Neste caso o número 01 refere-se ao mês de Janeiro, o eS refere-se ao dataset editedStatus. O mesmo vale para os arquivos <b>.csv</b>
+        </p>
+    </div>
+        <p>
+        Todos as exportações de pedidos com status de erro serão extraídas e renomeadas para a abreviação das palavras "error status". Então nestes casos os arquivos serão comumente
+        vistos como:
+    </p>
+    <pre>
+        <code>
+            es_dd-mm-yy.xlsx
+            es_dd-dd-mm-yy.xlsx
+        </code>
+    </pre>
+    <div class="i-box">
+    <p style="font-size: 14px;">
+    Tome cuidado para não confundir com os arquivos exportados usados para comparação. Estes tem as iniciais <b>ex</b> cujo significam "export". São estas stylesheets que utilizamos para comparar os status atual 
+    dos pedidos que já foram estimados, e estão agora ou "In delivery", "In transit", e/ou "Cancelled".
+    
+    Geralmente serão vistos como: 
+    <pre>
+        <code>
+            ex_dd-mm-yy.xlsx
+            ex_dd-dd-mm-yy.xlsx
+        </code>
+    </pre>
+    </p>
+    </div>
+    <p>
+        Os próximos caracteres como de costume referem-se ao dia, mês e ano em que o arquivo foi exportado. Porém, esses nomes podem variar de acordo com o contexto de filtros utilizados na plataforma.
+        Nestes casos eu costumo fazer sorted by date na própria plataforma para poder conseguir exportar todos e trunca-los no príncipal, e por conta disso como no segundo arquivo,
+        temos dias extras depois do underscore por que os filtros funcionam "in betweeen". O que seria entre os dias X, até o dia Y. Como padrão temos três underscores, diferentes do primeiro que só
+        continha um.
+        
+        <p>— Mas e se houver a necessidade de somente contatar os clientes (como já aconteceu)?</p>
+    </p>
+    <p>
+        Nestes casos, criamos um arquivo com o a abreviação de "cc" que refere-se a "contact customer".
+    </p>
+    <pre>
+        <code>
+            cc_dd-mm-yy.xlsx
+        </code>
+    </pre>
+    <p>
+        Feita esta introdução, eu não espero que entendam 100% a nomenclatura dos arquivos. Saber diferenciar qual é o principal e qual são os exportados já facilita a visibilidade do backlog
+        de quais arquivos estão sendo alterados e quais já foram ou necessitam de dados extras. O log table é a razão pela qual supervisão é importante. Sabendo com quais dados eu estarei manuseando
+        é o método de inspeção que prioriza evitar erros. Todas as alterações podem ser visualizadas no repositório do github ad hoc. A página sofrerá alterações porém cada commit poderá ser revisado
+        atrvés deste <link rel="repo" href="">link</link>.
+    </p>
+    <h1> Janeiro </h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+    <h1> Fevereiro </h1>
+    <table>
+        <tr>
+            <th>
+                es_02.14.25.xlsx
+            </th>
+            <th>
+                cc_20.02.25.xlsx
+            </th>
+            <th>
+                es_26-02-25.xlsx
+            </th>
+            <th>
+                es_02-28-25.xlsx
+            </th>
+        </tr>
+        
+        <tr>
+            <td>
+                Precisando reavaliar para saber quais foram cancelados e quais foram recuperados.
+            </td>
+            <td>
+                Precisando reavaliar para saber quais foram cancelados e quais foram recuperados.
+            </td>
+            <td>
+                Precisando reavaliar para saber quais foram cancelados e quais foram recuperados.
+            </td>
+            <td>
+                Precisando reavaliar para saber quais foram cancelados e quais foram recuperados.
+            </td>
+            
+        </tr>
+    </table>
+    
+    <h1> Março </h1>
+    <table>
+        <tr>
+            <th>
+                es_03-24-25.csv
+            </th>
+        </tr>
+        <tr>
+            <td>
+                No momento foram encontrados somente um arquivo em <b>.csv</b> do mês de Março.
+            </td>
+        </tr>
+    </table>
+   
+
+    <h1> Abril </h1>
+
+    <table>
+        <tr>
+            <th>
+                es_17-21.04.2025.xlsx 
+            </th>
+            <th>
+                22/04.xlsx
+            </th>
+            <th>
+                23-24/04.xlsx
+            </th>
+            <th>
+                25-30/04.xlsx
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Verificar caso haja pedidos realizados durante esse feriado para ajustar no PBI.
+            </td>
+            <td>
+                Houveram somente 2 pedidos perdidos com erros.
+            </td>
+            <td>
+                Não houveram pedidos com error status.
+            </td>
+            <td>
+                Ultimo arquivo de pedidos com erro status.
+            </td>
+        </tr>
+    </table>
+
+    <h1>Maio</h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+
+    <h1> Junho </h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+
+    <h1> Julho </h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+
+    <h1> Agosto </h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+
+    <h1> Setembro </h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+
+    <h1> Outubro </h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+
+    <h1> Novembro </h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+
+    <h1> Dezembro </h1>
+    <table>
+        <tr>
+            <th>
+                Sem dados
+            </th>
+        </tr>
+        <tr>
+            <td>
+                Sem informações.
+            </td>           
+        </tr>
+    </table>
+
+</div>
+</body>
+</html>
