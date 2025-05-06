@@ -103,6 +103,20 @@ td {
     padding: 8px;
 }
 
+.finished {
+    color: brown;
+}
+
+.pdf {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+embed {
+    width: 100%;
+    height: 500px;
+}
 
 /* images */
 img {
