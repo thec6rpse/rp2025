@@ -3,4 +3,5 @@ This repository contains the source code from our report written in HTML, CSS an
 
 Here is a screenshot of the entire page as a preview.
 
-![entire page](https://github.com/user-attachments/assets/630cdbde-a076-434e-ac7b-8d1bc234318b)
+![image](https://github.com/user-attachments/assets/4a5f3c12-5797-4263-9010-498dfea092fa)
+
