@@ -1,5 +1,5 @@
 ﻿# RP2025
-This repository contains the source code from our report written in HTML, CSS and JS.
+This repository contains the source code from our report written in HTML, CSS and JS. I added two scripts as an example of what is being implemented on our OVM with pandas library. None of them are relevant because the main repo is private.
 
 Here is a screenshot of the entire page as a preview.
 
